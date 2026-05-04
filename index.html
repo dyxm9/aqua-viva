@@ -1,4 +1,4 @@
-cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
+cat > /tmp/aquaviva.html << 'EOF'
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,12 +6,9 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Aqua Viva — Monitoramento Inteligente da Água</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <style>
 :root{
-  --void:#020812;--deep:#060f1f;--navy:#0a1628;--slate:#0e2040;
+  --void:#020812;--deep:#060f1f;--navy:#0a1628;
   --ocean:#1565c0;--pulse:#00e5ff;--bio:#00ffc8;--glow:#5dcaa5;
   --amber:#ffb300;--red:#ff3d3d;--white:#fff;
   --glass:rgba(255,255,255,0.035);--gb:rgba(0,229,255,0.08);
@@ -54,20 +51,17 @@ a{text-decoration:none;color:inherit}
   width:34px;height:34px;border-radius:50%;
   background:linear-gradient(135deg,var(--ocean),var(--bio));
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 16px rgba(0,255,200,.25);
-  position:relative;overflow:hidden;
+  box-shadow:0 0 16px rgba(0,255,200,.25);overflow:hidden;position:relative;
 }
 .brand-ring::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent)}
-.brand-ring img{width:22px;height:22px;border-radius:50%;object-fit:cover;position:relative;z-index:1}
+.brand-ring img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:50%}
 .brand-ring .fb{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 10px rgba(0,255,200,.8);position:relative;z-index:1}
 .brand-name{font-size:1.05rem;font-weight:800;letter-spacing:-.2px;background:linear-gradient(90deg,#fff,var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-links{display:flex;gap:2px}
 .nl{padding:7px 13px;border-radius:8px;font-size:.82rem;font-weight:500;color:var(--t2);cursor:pointer;border:none;background:none;transition:all .2s}
-.nl:hover,.nl.on{color:var(--t1);background:var(--glass)}
-.nav-right{display:flex;gap:8px;align-items:center}
+.nl:hover{color:var(--t1);background:var(--glass)}
 .btn-cta{padding:8px 18px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 0 20px rgba(0,229,255,.2)}
 .btn-cta:hover{box-shadow:0 0 35px rgba(0,229,255,.4);transform:translateY(-1px)}
-.nav-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--glow));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;cursor:pointer;border:1px solid var(--gb)}
 
 /* BOTTOM NAV */
 .bnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--bh);background:rgba(2,8,18,.97);backdrop-filter:blur(24px);border-top:1px solid var(--gb);flex-direction:row;align-items:center;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom)}
@@ -102,7 +96,7 @@ a{text-decoration:none;color:inherit}
 @keyframes shim{0%{background-position:0%}100%{background-position:200%}}
 .hp{color:var(--t2);font-size:clamp(.9rem,1.5vw,1.08rem);line-height:1.75;max-width:510px;margin:0 auto 32px;animation:fup .9s .2s ease both}
 .h-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fup .9s .3s ease both}
-.btn-glow{padding:14px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 0 28px rgba(0,229,255,.25);transition:all .3s;position:relative;overflow:hidden}
+.btn-glow{padding:14px 32px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 0 28px rgba(0,229,255,.25);transition:all .3s;display:inline-flex;align-items:center;gap:8px}
 .btn-glow:hover{box-shadow:0 0 48px rgba(0,229,255,.45);transform:translateY(-2px)}
 .btn-line{padding:14px 32px;border-radius:50px;background:transparent;color:var(--t1);border:1px solid rgba(255,255,255,.15);font-size:.95rem;font-weight:500;cursor:pointer;transition:all .3s}
 .btn-line:hover{border-color:rgba(0,229,255,.4);color:var(--bio)}
@@ -125,9 +119,7 @@ a{text-decoration:none;color:inherit}
 
 /* GRIDS */
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
 .g-split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;margin-top:36px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:28px}
 
 /* SENSOR CARDS */
 .scards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:28px}
@@ -142,7 +134,7 @@ a{text-decoration:none;color:inherit}
 .sg2{background:linear-gradient(160deg,#0a2050,#3949ab);opacity:.7}
 .sp{background:linear-gradient(160deg,#2a0a5a,#7b1fa2);opacity:.7}
 .st2{background:linear-gradient(160deg,#003328,#00897b);opacity:.7}
-.ssym{font-family:var(--mono);font-size:2rem;font-weight:700;color:#fff;line-height:1;position:relative;z-index:1;text-shadow:0 0 20px rgba(255,255,255,.3)}
+.ssym{font-family:var(--mono);font-size:2rem;font-weight:700;color:#fff;line-height:1;position:relative;z-index:1}
 .snm{color:rgba(255,255,255,.65);font-size:.66rem;margin-top:4px;letter-spacing:2px;text-transform:uppercase;position:relative;z-index:1}
 .sbody{padding:14px;background:rgba(255,255,255,.03)}
 .sbody h3{color:var(--t1);font-size:.84rem;font-weight:700;margin-bottom:5px}
@@ -182,17 +174,17 @@ a{text-decoration:none;color:inherit}
 
 /* PILARES */
 .pcards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:28px}
-.pc{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rl);padding:22px 16px;text-align:center;position:relative;overflow:hidden;transition:all .35s}
-.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pc2{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rl);padding:22px 16px;text-align:center;position:relative;overflow:hidden;transition:all .35s}
+.pc2::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .pc-edu::before{background:linear-gradient(90deg,var(--ocean),#42a5f5)}
 .pc-tra::before{background:linear-gradient(90deg,#e65100,var(--amber))}
 .pc-sus::before{background:linear-gradient(90deg,#1b5e20,#66bb6a)}
 .pc-ino::before{background:linear-gradient(90deg,#4a148c,#ab47bc)}
-.pc:hover{transform:translateY(-5px);border-color:rgba(0,229,255,.18)}
+.pc2:hover{transform:translateY(-5px);border-color:rgba(0,229,255,.18)}
 .pgl{font-size:2rem;margin-bottom:11px;display:block;transition:transform .3s}
-.pc:hover .pgl{transform:scale(1.15) rotate(-6deg)}
-.pc h3{font-size:.93rem;font-weight:700;color:var(--t1);margin-bottom:7px}
-.pc p{color:var(--t2);font-size:.79rem;line-height:1.6}
+.pc2:hover .pgl{transform:scale(1.15) rotate(-6deg)}
+.pc2 h3{font-size:.93rem;font-weight:700;color:var(--t1);margin-bottom:7px}
+.pc2 p{color:var(--t2);font-size:.79rem;line-height:1.6}
 
 /* ODS */
 .ogrid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-top:28px}
@@ -208,8 +200,7 @@ a{text-decoration:none;color:inherit}
 .tmb:hover{transform:translateY(-4px);border-color:rgba(0,229,255,.2)}
 .tav{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--bio));display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.1rem;font-weight:800;box-shadow:0 0 22px rgba(0,229,255,.2);transition:transform .3s}
 .tmb:hover .tav{transform:scale(1.08)}
-.tmb h3{color:var(--t1);font-size:.85rem;font-weight:700;margin-bottom:2px}
-.tmb p{color:var(--t3);font-size:.72rem}
+.tmb h3{color:var(--t1);font-size:.85rem;font-weight:700}
 
 /* PRODUTO */
 .prod-hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start;margin-top:32px}
@@ -219,61 +210,19 @@ a{text-decoration:none;color:inherit}
 .dtags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:17px}
 .dtag{background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.15);border-radius:50px;padding:4px 11px;font-size:.68rem;color:var(--bio);font-weight:600}
 
-/* ═══ CART & BUY ═══ */
-.buy-col{display:flex;flex-direction:column;gap:14px}
+/* BUY CARD */
+.buy-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rxl);padding:28px 22px;position:relative;overflow:hidden}
+.buy-card::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--bio),transparent)}
+.p-name{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.p-sub{color:var(--bio);font-size:.82rem;margin-bottom:20px;font-weight:500}
+.price-block{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.12);border-radius:var(--rm);padding:18px;margin-bottom:18px;text-align:center}
+.price-big{font-family:var(--mono);font-size:2.6rem;font-weight:700;background:linear-gradient(90deg,var(--pulse),var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.price-sm{color:var(--t2);font-size:.78rem;margin-top:5px}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.feat-list li{display:flex;gap:9px;align-items:center;font-size:.87rem;color:var(--t2)}
+.feat-list li::before{content:'✓';color:var(--bio);font-weight:700;min-width:14px}
 
-/* Cart box */
-.cart-box{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rxl);padding:24px 20px;position:relative;overflow:hidden}
-.cart-box::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--bio),transparent)}
-.cart-title{font-size:.78rem;font-weight:700;color:var(--bio);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:flex;align-items:center;gap:7px}
-.cart-items{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;min-height:60px}
-.cart-empty{color:var(--t3);font-size:.8rem;text-align:center;padding:16px 0}
-.ci{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.035);border:1px solid var(--gb);border-radius:var(--r);padding:11px 13px;gap:10px}
-.ci-info{flex:1}
-.ci-name{font-size:.85rem;font-weight:700;color:var(--t1);margin-bottom:2px}
-.ci-desc{font-size:.72rem;color:var(--t2)}
-.ci-price{font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--bio);white-space:nowrap}
-.ci-rm{background:rgba(255,61,61,.1);border:1px solid rgba(255,61,61,.2);color:var(--red);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:all .2s;flex-shrink:0}
-.ci-rm:hover{background:rgba(255,61,61,.2)}
-.cart-divider{height:1px;background:var(--gb);margin:12px 0}
-.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.cart-total-label{font-size:.85rem;font-weight:700;color:var(--t1)}
-.cart-total-val{font-family:var(--mono);font-size:1.3rem;font-weight:700;background:linear-gradient(90deg,var(--pulse),var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-
-/* Add buttons */
-.add-items{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.add-btn{background:rgba(255,255,255,.03);border:1px solid var(--gb);border-radius:var(--r);padding:12px 10px;cursor:pointer;transition:all .25s;text-align:left;position:relative}
-.add-btn.in-cart{border-color:rgba(0,255,200,.3);background:rgba(0,255,200,.04)}
-.add-btn:hover{border-color:rgba(0,229,255,.25);background:rgba(0,229,255,.04)}
-.add-btn .ab-name{font-size:.82rem;font-weight:700;color:var(--t1);margin-bottom:2px}
-.add-btn .ab-price{font-family:var(--mono);font-size:.88rem;font-weight:700;color:var(--bio)}
-.add-btn .ab-desc{font-size:.7rem;color:var(--t2);margin-top:2px}
-.ab-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--bio);display:none;align-items:center;justify-content:center;font-size:.65rem;color:#020812}
-.add-btn.in-cart .ab-check{display:flex}
-
-/* Planos selector */
-.plan-sel{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.pl-opt{background:rgba(255,255,255,.03);border:1px solid var(--gb);border-radius:var(--r);padding:12px 10px;cursor:pointer;transition:all .2s;position:relative}
-.pl-opt.on{background:rgba(0,229,255,.07);border-color:rgba(0,229,255,.3)}
-.pl-pop{position:absolute;top:-7px;right:9px;background:var(--bio);color:#020812;font-size:.57rem;font-weight:800;padding:2px 8px;border-radius:50px;letter-spacing:.4px}
-.pl-name{font-size:.82rem;font-weight:700;color:var(--t1);margin-bottom:2px}
-.pl-price{font-family:var(--mono);font-size:.93rem;font-weight:700;color:var(--bio)}
-.pl-d{font-size:.68rem;color:var(--t2);margin-top:2px}
-
-/* Plan benefits */
-.plan-benefits{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;animation:fup .3s ease}
-.pb-title{font-size:.72rem;font-weight:700;color:var(--bio);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px}
-.pb-list{list-style:none;display:flex;flex-direction:column;gap:5px}
-.pb-list li{display:flex;gap:7px;align-items:center;font-size:.79rem;color:var(--t2)}
-.pb-list li::before{content:'✓';color:var(--bio);font-weight:700;min-width:12px}
-
-/* CTA buy */
-.btn-buy{width:100%;padding:15px;border:none;border-radius:var(--rm);background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.97rem;font-weight:700;cursor:pointer;box-shadow:0 0 26px rgba(0,229,255,.2);transition:all .3s}
-.btn-buy:hover{box-shadow:0 0 44px rgba(0,229,255,.4);transform:translateY(-2px)}
-.btn-buy:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.buy-note{text-align:center;color:var(--t3);font-size:.69rem;margin-top:7px}
-
-/* PLANS PAGE */
+/* PLANOS */
 .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:32px}
 .plan-c{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rxl);padding:26px 20px;text-align:center;position:relative;overflow:hidden;transition:all .35s}
 .plan-c.hot{border-color:rgba(0,229,255,.25);background:rgba(0,229,255,.04)}
@@ -286,9 +235,10 @@ a{text-decoration:none;color:inherit}
 .pc-ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left}
 .pc-ul li{display:flex;gap:7px;align-items:center;font-size:.8rem;color:var(--t2)}
 .pc-ul li::before{content:'✓';color:var(--bio);font-weight:700;min-width:12px}
-.btn-pc{width:100%;padding:12px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.86rem;font-weight:700;cursor:pointer;transition:all .2s}
-.btn-pc.ghost{background:transparent;border:1px solid var(--gb);color:var(--t2)}
-.btn-pc.ghost:hover{border-color:rgba(0,229,255,.3);color:var(--bio)}
+.btn-wpp{width:100%;padding:14px;border:none;border-radius:var(--rm);background:linear-gradient(135deg,#075e54,#25d366);color:#fff;font-size:.97rem;font-weight:700;cursor:pointer;box-shadow:0 0 26px rgba(37,211,102,.2);transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-wpp:hover{box-shadow:0 0 44px rgba(37,211,102,.4);transform:translateY(-2px)}
+.btn-wpp-ghost{width:100%;padding:12px;border:1px solid rgba(37,211,102,.3);border-radius:var(--rm);background:rgba(37,211,102,.06);color:#25d366;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.btn-wpp-ghost:hover{background:rgba(37,211,102,.12);border-color:rgba(37,211,102,.5)}
 
 /* MKT */
 .mkt-g{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:24px}
@@ -301,111 +251,6 @@ a{text-decoration:none;color:inherit}
 .mkt-c p{color:var(--t2);font-size:.84rem;line-height:1.7;margin-bottom:13px}
 .tags2{display:flex;flex-wrap:wrap;gap:7px}
 .tg{background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.13);border-radius:50px;padding:3px 11px;font-size:.68rem;color:rgba(0,229,255,.7)}
-
-/* CHECKOUT */
-.ck-wrap{max-width:720px;margin:0 auto;padding:24px clamp(16px,4vw,48px) 80px}
-.fmini{font-size:.79rem;font-weight:700;color:var(--bio);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--gb);display:block}
-.fg{margin-bottom:13px}
-.fg label{display:block;color:var(--t2);font-size:.75rem;font-weight:500;margin-bottom:5px}
-.fg input,.fg select,.fg textarea{width:100%;background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);color:var(--t1);padding:11px 13px;font-size:.88rem;outline:none;transition:border-color .2s}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(0,229,255,.4)}
-.fg select option{background:#040d1a}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.osum{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);border-radius:var(--rm);padding:16px;margin-bottom:18px}
-.osum h3{font-size:.88rem;font-weight:700;margin-bottom:11px}
-.or2{display:flex;justify-content:space-between;font-size:.81rem;margin-bottom:5px}
-.or2 span:first-child{color:var(--t2)}
-.ot2{display:flex;justify-content:space-between;padding-top:9px;border-top:1px solid var(--gb);margin-top:7px}
-.ot2 span:first-child{font-weight:700}
-.ot2 span:last-child{font-family:var(--mono);font-size:1.1rem;font-weight:700;background:linear-gradient(90deg,var(--pulse),var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-
-/* AUTH */
-.auth-wrap{max-width:400px;margin:0 auto;padding:clamp(28px,6vw,56px) clamp(16px,4vw,48px) 80px}
-.auth-logo{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--bio));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 0 30px rgba(0,229,255,.2)}
-.auth-logo img{width:44px;height:44px;border-radius:50%;object-fit:cover}
-.auth-logo .fb2{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9)}
-.auth-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rxl);padding:28px 22px}
-.a-tabs{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.03);border-radius:var(--r);padding:3px;margin-bottom:20px}
-.atab{padding:8px;border-radius:7px;font-size:.8rem;font-weight:600;color:var(--t3);cursor:pointer;border:none;background:none;transition:all .2s}
-.atab.on{background:rgba(0,229,255,.1);color:var(--bio)}
-.btn-auth{width:100%;padding:13px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;margin-top:5px;transition:all .25s}
-.btn-auth:hover{box-shadow:0 0 28px rgba(0,229,255,.3)}
-.or-sep{text-align:center;color:var(--t3);font-size:.74rem;margin:12px 0;position:relative}
-.or-sep::before,.or-sep::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:var(--gb)}
-.or-sep::before{left:0}.or-sep::after{right:0}
-.btn-gg{width:100%;padding:11px;border:1px solid var(--gb);border-radius:var(--r);background:var(--glass);color:var(--t1);font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s}
-.btn-gg:hover{border-color:rgba(0,229,255,.25)}
-
-/* DASH */
-.dash-wrap{padding:20px clamp(16px,4vw,48px) 80px;max-width:1100px;margin:0 auto}
-.d-greet{font-size:1.3rem;font-weight:800;margin-bottom:3px}
-.d-sub{color:var(--t2);font-size:.82rem;margin-bottom:20px}
-.spill{display:inline-flex;align-items:center;gap:5px;background:rgba(0,255,200,.08);border:1px solid rgba(0,255,200,.2);border-radius:50px;padding:4px 11px;font-size:.7rem;color:var(--bio);font-weight:600}
-.o-card{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rl);padding:16px;margin-bottom:9px}
-.o-head2{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
-.o-id{font-family:var(--mono);font-size:.8rem;font-weight:700}
-.o-dt{color:var(--t3);font-size:.68rem}
-.o-prod{color:var(--t2);font-size:.8rem;margin-bottom:5px}
-.o-bot{display:flex;justify-content:space-between;align-items:center}
-.o-val{font-family:var(--mono);font-weight:700;color:var(--bio)}
-.sbadge{border-radius:50px;padding:3px 9px;font-size:.65rem;font-weight:700}
-.sw{background:rgba(255,179,0,.12);color:var(--amber)}
-.so{background:rgba(0,255,200,.1);color:var(--bio)}
-.ss2{background:rgba(30,136,229,.1);color:#42a5f5}
-
-/* ADMIN */
-.adm-wrap{padding:20px clamp(16px,4vw,48px) 80px;max-width:1100px;margin:0 auto}
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:24px}
-.stc{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rm);padding:16px;text-align:center}
-.stv{font-family:var(--mono);font-size:1.5rem;font-weight:700;background:linear-gradient(90deg,var(--pulse),var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stl{color:var(--t3);font-size:.65rem;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
-.oad{background:var(--glass);border:1px solid var(--gb);border-radius:var(--rm);padding:14px;margin-bottom:9px}
-.oad-h{display:flex;justify-content:space-between;margin-bottom:7px}
-.oad-nm{font-weight:700;font-size:.86rem}
-.oad-tm{color:var(--t3);font-size:.68rem}
-.oad-info{color:var(--t2);font-size:.76rem;line-height:1.7;margin-bottom:9px;font-family:var(--mono)}
-.stat-sel{width:100%;background:var(--glass);border:1px solid var(--gb);border-radius:7px;color:var(--t1);padding:8px 11px;font-size:.78rem;margin-bottom:7px}
-.btn-upd{width:100%;padding:8px;border:none;border-radius:7px;background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.76rem;font-weight:700;cursor:pointer}
-
-/* MODAL PIX */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:500;display:none;align-items:flex-end;justify-content:center;padding:0}
-.overlay.op{display:flex}
-@media(min-width:640px){.overlay{align-items:center;padding:20px}}
-.mbox{background:#060f1f;border:1px solid rgba(0,229,255,.15);border-radius:var(--rxl) var(--rxl) 0 0;padding:26px 20px;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;position:relative;animation:sup .35s ease}
-@media(min-width:640px){.mbox{border-radius:var(--rxl);animation:fup .3s ease}}
-@keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.m-hand{width:34px;height:4px;background:var(--gb);border-radius:50px;margin:0 auto 18px}
-.m-close{position:absolute;top:13px;right:13px;background:var(--glass);border:1px solid var(--gb);color:var(--t1);width:28px;height:28px;border-radius:50%;font-size:.9rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
-.m-close:hover{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3)}
-.mbox h2{font-size:1.2rem;font-weight:800;margin-bottom:4px}
-.m-sub{color:var(--bio);font-size:.78rem;margin-bottom:16px}
-.pa{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.15);border-radius:var(--rm);padding:15px;text-align:center;margin-bottom:15px}
-.pa-l{color:var(--t3);font-size:.7rem;margin-bottom:3px}
-.pa-v{font-family:var(--mono);font-size:1.9rem;font-weight:700;background:linear-gradient(90deg,var(--pulse),var(--bio));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.pa-items{font-size:.72rem;color:var(--t2);margin-top:5px}
-.psteps{display:flex;flex-direction:column;gap:10px;margin-bottom:15px}
-.ps{display:flex;gap:10px;align-items:flex-start}
-.psn{width:24px;height:24px;min-width:24px;border-radius:50%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.22);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--bio);font-family:var(--mono)}
-.ps p{color:var(--t2);font-size:.79rem;line-height:1.55;padding-top:2px}
-.ps strong{color:var(--t1)}
-.pkey{background:var(--glass);border:1px solid var(--gb);border-radius:var(--r);padding:12px;display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:12px}
-.pk-v{font-family:var(--mono);font-size:.85rem;color:var(--bio);word-break:break-all;flex:1}
-.btn-cp{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--bio);padding:7px 11px;border-radius:7px;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s}
-.btn-cp:hover{background:rgba(0,229,255,.2)}
-.pinfo{background:rgba(255,255,255,.025);border-radius:var(--r);padding:12px;font-size:.76rem;color:var(--t2);line-height:1.7;margin-bottom:12px;font-family:var(--mono)}
-.pinfo strong{color:var(--t1)}
-.btn-cf{width:100%;padding:13px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--ocean),var(--bio));color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all .2s}
-.sbox{display:none;text-align:center;padding:8px 0}
-.sbox.show{display:block}
-.mf.hide{display:none}
-.sic{font-size:3rem;margin-bottom:12px}
-.sbox h3{font-size:1.2rem;font-weight:800;margin-bottom:9px}
-.sbox p{color:var(--t2);font-size:.82rem;line-height:1.7}
-
-/* EMPTY */
-.empty{text-align:center;padding:36px 16px}
-.empty .ei{font-size:2.5rem;margin-bottom:12px;opacity:.4}
-.empty p{color:var(--t2);font-size:.82rem}
 
 /* FOOTER */
 .footer{background:rgba(2,8,18,.95);border-top:1px solid var(--gb);padding:24px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
@@ -424,15 +269,14 @@ a{text-decoration:none;color:inherit}
 .rvl.ok{opacity:1;transform:none}
 .rvr{opacity:0;transform:translateX(22px);transition:opacity .7s ease,transform .7s ease}
 .rvr.ok{opacity:1;transform:none}
-.sg .gc,.sg .scard,.sg .pc,.sg .oc,.sg .tmb,.sg .plan-c,.sg .sv2{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.sg.ok .gc:nth-child(1),.sg.ok .scard:nth-child(1),.sg.ok .pc:nth-child(1),.sg.ok .oc:nth-child(1),.sg.ok .tmb:nth-child(1),.sg.ok .plan-c:nth-child(1),.sg.ok .sv2:nth-child(1){opacity:1;transform:none;transition-delay:.04s}
-.sg.ok .gc:nth-child(2),.sg.ok .scard:nth-child(2),.sg.ok .pc:nth-child(2),.sg.ok .oc:nth-child(2),.sg.ok .tmb:nth-child(2),.sg.ok .plan-c:nth-child(2),.sg.ok .sv2:nth-child(2){opacity:1;transform:none;transition-delay:.1s}
-.sg.ok .gc:nth-child(3),.sg.ok .scard:nth-child(3),.sg.ok .pc:nth-child(3),.sg.ok .oc:nth-child(3),.sg.ok .tmb:nth-child(3),.sg.ok .plan-c:nth-child(3),.sg.ok .sv2:nth-child(3){opacity:1;transform:none;transition-delay:.16s}
-.sg.ok .gc:nth-child(4),.sg.ok .scard:nth-child(4),.sg.ok .pc:nth-child(4),.sg.ok .oc:nth-child(4),.sg.ok .tmb:nth-child(4),.sg.ok .sv2:nth-child(4){opacity:1;transform:none;transition-delay:.22s}
+.sg .gc,.sg .scard,.sg .pc2,.sg .oc,.sg .tmb,.sg .plan-c,.sg .sv2{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.sg.ok .gc:nth-child(1),.sg.ok .scard:nth-child(1),.sg.ok .pc2:nth-child(1),.sg.ok .oc:nth-child(1),.sg.ok .tmb:nth-child(1),.sg.ok .plan-c:nth-child(1),.sg.ok .sv2:nth-child(1){opacity:1;transform:none;transition-delay:.04s}
+.sg.ok .gc:nth-child(2),.sg.ok .scard:nth-child(2),.sg.ok .pc2:nth-child(2),.sg.ok .oc:nth-child(2),.sg.ok .tmb:nth-child(2),.sg.ok .plan-c:nth-child(2),.sg.ok .sv2:nth-child(2){opacity:1;transform:none;transition-delay:.1s}
+.sg.ok .gc:nth-child(3),.sg.ok .scard:nth-child(3),.sg.ok .pc2:nth-child(3),.sg.ok .oc:nth-child(3),.sg.ok .tmb:nth-child(3),.sg.ok .plan-c:nth-child(3),.sg.ok .sv2:nth-child(3){opacity:1;transform:none;transition-delay:.16s}
+.sg.ok .gc:nth-child(4),.sg.ok .scard:nth-child(4),.sg.ok .pc2:nth-child(4),.sg.ok .oc:nth-child(4),.sg.ok .tmb:nth-child(4),.sg.ok .sv2:nth-child(4){opacity:1;transform:none;transition-delay:.22s}
 .sg.ok .scard:nth-child(5),.sg.ok .oc:nth-child(5),.sg.ok .sv2:nth-child(5){opacity:1;transform:none;transition-delay:.28s}
 .sg.ok .scard:nth-child(6),.sg.ok .gc:nth-child(6){opacity:1;transform:none;transition-delay:.34s}
 
-/* ANIMS */
 @keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 /* RESPONSIVE */
@@ -447,13 +291,11 @@ a{text-decoration:none;color:inherit}
   .plans-grid{grid-template-columns:1fr}
   .ogrid{grid-template-columns:repeat(3,1fr)}
   .mkt-g{grid-template-columns:1fr}
-  .stat-row{grid-template-columns:1fr 1fr}
 }
 @media(max-width:580px){
-  .g3,.g2,.scards,.pcards,.tgrid,.ogrid,.stat-row{grid-template-columns:1fr}
+  .g3,.scards,.pcards,.tgrid,.ogrid{grid-template-columns:1fr}
   .kpis{gap:9px}.kpi{min-width:80px;padding:12px 13px}
   .h-acts{flex-direction:column;align-items:center}
-  .plan-sel,.add-items,.fr{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -463,12 +305,12 @@ a{text-decoration:none;color:inherit}
 <canvas id="cvs"></canvas>
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════ PAGE: HOME ══════════════ -->
+<!-- ══════════ PAGE: HOME ══════════ -->
 <div class="page active" id="page-home">
   <div class="topbar" id="topbar">
     <button class="brand" onclick="goHome()">
       <div class="brand-ring">
-        <img src="logo.jpg" alt="Aqua Viva" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <img src="logo.jpg" alt="Aqua Viva" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="fb" style="display:none"></div>
       </div>
       <span class="brand-name">AQUA VIVA</span>
@@ -480,14 +322,10 @@ a{text-decoration:none;color:inherit}
       <button class="nl" onclick="go('planos')">Planos</button>
       <button class="nl" onclick="scrollTo2('sec-eq')">Equipe</button>
     </nav>
-    <div class="nav-right">
-      <button class="btn-cta" onclick="go('produto')">Comprar — R$ 1.200</button>
-      <button class="nav-av" id="nav-av" onclick="go('conta')">?</button>
-    </div>
+    <button class="btn-cta" onclick="wppContato('Olá! Tenho interesse no Aqua Viva.')">💬 Falar no WhatsApp</button>
   </div>
 
   <div class="sc-area wb" id="home-sc">
-    <!-- HERO -->
     <section class="hero">
       <div class="h-mesh"></div><div class="h-grid"></div>
       <div class="h-wave"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,40 1440,60 L1440,120 L0,120Z" fill="#020812" opacity=".7"/><path d="M0,80 C480,20 960,140 1440,80 L1440,120 L0,120Z" fill="#020812"/></svg></div>
@@ -523,10 +361,10 @@ a{text-decoration:none;color:inherit}
     <div class="sec" id="sec-sol">
       <div class="cx rv"><span class="tag">A Solução</span><h2 class="h2">Hardware real + plataforma inteligente</h2><p class="sub">Sensores IoT, alertas automáticos e dashboard em tempo real.</p></div>
       <div class="g3 sg">
-        <div class="gc"><div class="gc-ic">📡</div><h3>Sensores em tempo real</h3><p>3 sensores ativos (pH, turbidez, temperatura) com mais 3 em desenvolvimento — diagnóstico contínuo da água.</p><div class="gc-line"></div></div>
+        <div class="gc"><div class="gc-ic">📡</div><h3>3 Sensores ativos</h3><p>pH, turbidez e temperatura monitorados continuamente — mais 3 sensores chegando em breve.</p><div class="gc-line"></div></div>
         <div class="gc"><div class="gc-ic">🚨</div><h3>Alertas instantâneos</h3><p>Risco detectado em segundos. WhatsApp, Telegram e e-mail — você escolhe como ser avisado.</p><div class="gc-line"></div></div>
         <div class="gc"><div class="gc-ic">🗺️</div><h3>Mapa interativo</h3><p>Todos os pontos monitorados no mapa com status verde/amarelo/vermelho em tempo real.</p><div class="gc-line"></div></div>
-        <div class="gc"><div class="gc-ic">☀️</div><h3>Energia autônoma</h3><p>Painel solar 5V + bateria 18650. Opera sem energia elétrica da rede por tempo indeterminado.</p><div class="gc-line"></div></div>
+        <div class="gc"><div class="gc-ic">☀️</div><h3>Energia autônoma</h3><p>Painel solar 5V + bateria 18650. Opera sem energia elétrica por tempo indeterminado.</p><div class="gc-line"></div></div>
         <div class="gc"><div class="gc-ic">💾</div><h3>Backup offline</h3><p>Cartão SD salva todas as leituras localmente. Zero perda de dados sem Wi-Fi.</p><div class="gc-line"></div></div>
         <div class="gc"><div class="gc-ic">📊</div><h3>Histórico inteligente</h3><p>Gráficos dos últimos 7, 30 e 90 dias por parâmetro com marcação de eventos críticos.</p><div class="gc-line"></div></div>
       </div>
@@ -592,13 +430,11 @@ a{text-decoration:none;color:inherit}
 
     <!-- SENSORES -->
     <div class="sec" id="sec-sens">
-      <div class="cx rv"><span class="tag">Hardware</span><h2 class="h2">Sensores — diagnóstico da água</h2><p class="sub">3 sensores ativos e 3 em breve. Cobertura total dos parâmetros críticos.</p></div>
+      <div class="cx rv"><span class="tag">Hardware</span><h2 class="h2">Sensores — diagnóstico da água</h2><p class="sub">3 sensores ativos hoje. Mais 3 chegando em breve para cobertura total.</p></div>
       <div class="scards sg">
-        <!-- ATIVOS -->
         <div class="scard"><div class="stop sv"><div class="ssym">pH</div><div class="snm">Acidez</div></div><div class="sbody"><h3>SEN0161</h3><p>Mede acidez ou alcalinidade. Fora do ideal indica esgoto, químicos ou degradação do ecossistema.</p><div class="srange">✅ Ideal: 6,5–8,5 &nbsp;|&nbsp; 🚨 &lt;5 ou &gt;10</div></div></div>
-        <div class="scard"><div class="stop sb"><div class="ssym">NTU</div><div class="snm">Turbidez</div></div><div class="sbody"><h3>SEN0189</h3><p>Mede a opacidade da água. Alta turbidez bloqueia a luz solar e destrói a base da cadeia alimentar aquática.</p><div class="srange">✅ Limpa: &lt;40 NTU &nbsp;|&nbsp; 🚨 &gt;100 NTU</div></div></div>
+        <div class="scard"><div class="stop sb"><div class="ssym">NTU</div><div class="snm">Turbidez</div></div><div class="sbody"><h3>SEN0189</h3><p>Mede a opacidade da água. Alta turbidez bloqueia a luz solar e destrói a cadeia alimentar aquática.</p><div class="srange">✅ Limpa: &lt;40 NTU &nbsp;|&nbsp; 🚨 &gt;100 NTU</div></div></div>
         <div class="scard"><div class="stop sa"><div class="ssym">°C</div><div class="snm">Temperatura</div></div><div class="sbody"><h3>DS18B20</h3><p>Variações bruscas de temperatura reduzem O₂ dissolvido e estressam os peixes, aumentando mortalidade.</p><div class="srange">✅ Tilápia: 25–32°C &nbsp;|&nbsp; 🚨 &gt;35°C</div></div></div>
-        <!-- EM BREVE -->
         <div class="scard"><span class="soon-badge">Em breve</span><div class="stop sg2"><div class="ssym" style="opacity:.8">O₂</div><div class="snm">Oxigênio</div></div><div class="sbody"><h3>O₂ Dissolvido</h3><p>O parâmetro mais crítico para piscicultura. Queda abaixo de 3mg/L mata peixes em horas.</p><div class="srange">✅ &gt;5 mg/L &nbsp;|&nbsp; 🚨 &lt;3 mg/L</div></div><div class="soon-msg">⏳ Disponível em breve</div></div>
         <div class="scard"><span class="soon-badge">Em breve</span><div class="stop sp"><div class="ssym" style="opacity:.8">TDS</div><div class="snm">Sólidos</div></div><div class="sbody"><h3>TDS / Condutividade</h3><p>Detecta contaminação por fertilizantes, agrotóxicos ou produtos químicos dissolvidos na água.</p><div class="srange">✅ 100–500ppm &nbsp;|&nbsp; 🚨 &gt;1000</div></div><div class="soon-msg">⏳ Disponível em breve</div></div>
         <div class="scard"><span class="soon-badge">Em breve</span><div class="stop st2"><div class="ssym" style="opacity:.8">cm</div><div class="snm">Nível</div></div><div class="sbody"><h3>Nível d'água</h3><p>Detecta vazamentos ou evaporação excessiva no tanque, prevenindo perdas por exposição dos peixes.</p><div class="srange">✅ Estável &nbsp;|&nbsp; 🚨 Var &gt;10%</div></div><div class="soon-msg">⏳ Disponível em breve</div></div>
@@ -610,17 +446,17 @@ a{text-decoration:none;color:inherit}
       <div class="sec cx">
         <span class="tag rv">Pilares</span><h2 class="h2 rv">Ecossistema de oportunidades</h2>
         <div class="pcards sg">
-          <div class="pc pc-edu"><span class="pgl">🎓</span><h3>Educação</h3><p>Forma jovens em IoT, dados ambientais e sustentabilidade tecnológica real.</p></div>
-          <div class="pc pc-tra"><span class="pgl">💼</span><h3>Trabalho</h3><p>Gera empregos em instalação, manutenção e desenvolvimento de software.</p></div>
-          <div class="pc pc-sus"><span class="pgl">🌱</span><h3>Sustentabilidade</h3><p>Preserva rios e protege a produção alimentar sustentável do Brasil.</p></div>
-          <div class="pc pc-ino"><span class="pgl">💡</span><h3>Inovação</h3><p>IoT real resolvendo um problema ambiental e econômico urgente.</p></div>
+          <div class="pc2 pc-edu"><span class="pgl">🎓</span><h3>Educação</h3><p>Forma jovens em IoT, dados ambientais e sustentabilidade tecnológica real.</p></div>
+          <div class="pc2 pc-tra"><span class="pgl">💼</span><h3>Trabalho</h3><p>Gera empregos em instalação, manutenção e desenvolvimento de software.</p></div>
+          <div class="pc2 pc-sus"><span class="pgl">🌱</span><h3>Sustentabilidade</h3><p>Preserva rios e protege a produção alimentar sustentável do Brasil.</p></div>
+          <div class="pc2 pc-ino"><span class="pgl">💡</span><h3>Inovação</h3><p>IoT real resolvendo um problema ambiental e econômico urgente.</p></div>
         </div>
       </div>
     </div>
 
     <!-- ODS -->
     <div class="sec cx">
-      <span class="tag rv">Agenda 2030</span><h2 class="h2 rv">Conectados aos objetivos globais</h2>
+      <span class="tag rv">Agenda 2030</span><h2 class="h2 rv">Objetivos globais da ONU</h2>
       <div class="ogrid sg">
         <div class="oc"><div class="on2">ODS 4</div><div class="ot">Educação</div><div class="od">Conhecimento técnico como base</div></div>
         <div class="oc"><div class="on2">ODS 6</div><div class="ot">Água</div><div class="od">Monitoramento hídrico direto</div></div>
@@ -635,7 +471,7 @@ a{text-decoration:none;color:inherit}
       <div class="sec cx" id="sec-eq">
         <span class="tag rv">A Equipe</span><h2 class="h2 rv">INFOTEC HF 2026</h2>
         <div class="tgrid sg">
-          <div class="tmb"><div class="tav">JM</div><h3>João Miguel</h3><p>Da Rocha</p></div>
+          <div class="tmb"><div class="tav">JM</div><h3>João Miguel</h3></div>
           <div class="tmb"><div class="tav">LM</div><h3>Lara Mercier</h3></div>
           <div class="tmb"><div class="tav">SN</div><h3>Sophia Nunes</h3></div>
           <div class="tmb"><div class="tav">AC</div><h3>Ana Carolina</h3></div>
@@ -645,15 +481,19 @@ a{text-decoration:none;color:inherit}
 
     <!-- CONTATO -->
     <div class="sec cx rv">
-      <span class="tag">Contato</span><h2 class="h2">Fale conosco</h2>
-      <p class="sub" style="margin:0 auto 10px">📧 aquavivain@outlook.com</p>
-      <p class="sub" style="margin:0 auto">📍 Colatina, ES — Brasil</p>
+      <span class="tag">Contato</span>
+      <h2 class="h2">Fale conosco</h2>
+      <p class="sub" style="margin:0 auto 24px">Tire dúvidas, faça um pedido ou saiba mais sobre o Aqua Viva.</p>
+      <a class="btn-wpp" style="max-width:320px;margin:0 auto" onclick="wppContato('Olá! Gostaria de saber mais sobre o Aqua Viva.')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Falar no WhatsApp
+      </a>
     </div>
 
     <footer class="footer">
       <div class="fb-brand">
         <div class="brand-ring" style="width:28px;height:28px">
-          <img src="logo.jpg" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <img src="logo.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="fb" style="display:none;width:14px;height:14px"></div>
         </div>
         <span>AQUA VIVA</span>
@@ -667,18 +507,17 @@ a{text-decoration:none;color:inherit}
     <button class="bni on" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button>
     <button class="bni" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button>
     <button class="bni" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button>
-    <button class="bni" onclick="go('conta');bmob(this)"><span class="bni-ic">👤</span>Conta</button>
-    <button class="bni" onclick="go('vendedor');bmob(this)"><span class="bni-ic">⚙️</span>Admin</button>
+    <button class="bni" onclick="wppContato('Olá! Gostaria de saber mais sobre o Aqua Viva.')"><span class="bni-ic">💬</span>WhatsApp</button>
   </nav>
 </div>
 
-<!-- ══════════════ PAGE: PRODUTO ══════════════ -->
+<!-- ══════════ PAGE: PRODUTO ══════════ -->
 <div class="page" id="page-produto">
-  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Produto</span><button class="nav-av" id="nav-av2" onclick="go('conta')">?</button></div>
+  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Produto</span><div style="width:60px"></div></div>
   <div class="sc-area wb" style="padding-top:var(--nh)">
     <div class="sec">
       <div class="prod-hero">
-        <!-- DEVICE SVG -->
+        <!-- DEVICE -->
         <div class="device-wrap">
           <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="140" cy="224" rx="100" ry="5" fill="rgba(0,0,0,.35)"/>
@@ -729,739 +568,152 @@ a{text-decoration:none;color:inherit}
           </div>
         </div>
 
-        <!-- BUY COLUMN -->
-        <div class="buy-col">
-          <!-- CARRINHO -->
-          <div class="cart-box">
-            <div class="cart-title">🛒 Carrinho</div>
-
-            <!-- ITENS DISPONÍVEIS PARA ADICIONAR -->
-            <p style="font-size:.72rem;color:var(--t2);margin-bottom:9px;font-weight:500">Adicione o que desejar:</p>
-            <div class="add-items" id="add-items">
-              <button class="add-btn" id="ab-device" onclick="toggleItem('device')">
-                <div class="ab-check">✓</div>
-                <div class="ab-name">Kit IoT Completo</div>
-                <div class="ab-price">R$ 1.200</div>
-                <div class="ab-desc">Hardware + firmware</div>
-              </button>
-              <button class="add-btn" id="ab-plan" onclick="toggleItem('plan')">
-                <div class="ab-check">✓</div>
-                <div class="ab-name">Plano Mensal</div>
-                <div class="ab-price" id="ab-plan-price">R$ 89/mês</div>
-                <div class="ab-desc">Plataforma digital</div>
-              </button>
-            </div>
-
-            <!-- SELEÇÃO DE PLANO (aparece quando plano está no carrinho) -->
-            <div id="plan-selector" style="display:none">
-              <p style="font-size:.72rem;color:var(--t2);margin-bottom:8px;font-weight:500">Escolha o plano:</p>
-              <div class="plan-sel">
-                <div class="pl-opt on" id="pl-basico" onclick="selPlan('basico')">
-                  <div class="pl-name">Básico</div>
-                  <div class="pl-price">R$ 89/mês</div>
-                  <div class="pl-d">Até 3 tanques</div>
-                </div>
-                <div class="pl-opt" id="pl-pro" onclick="selPlan('pro')">
-                  <span class="pl-pop">TOP</span>
-                  <div class="pl-name">Profissional</div>
-                  <div class="pl-price">R$ 189/mês</div>
-                  <div class="pl-d">Ilimitado</div>
-                </div>
-              </div>
-
-              <!-- BENEFÍCIOS DO PLANO SELECIONADO -->
-              <div class="plan-benefits" id="plan-benefits">
-                <div class="pb-title" id="pb-title">Plano Básico inclui:</div>
-                <ul class="pb-list" id="pb-list"></ul>
-              </div>
-            </div>
-
-            <!-- ITENS NO CARRINHO -->
-            <div class="cart-divider"></div>
-            <div class="cart-items" id="cart-items">
-              <div class="cart-empty" id="cart-empty">Nenhum item adicionado</div>
-            </div>
-
-            <div class="cart-divider"></div>
-            <div class="cart-total-row">
-              <span class="cart-total-label">Total</span>
-              <span class="cart-total-val" id="cart-total">R$ 0,00</span>
-            </div>
-
-            <button class="btn-buy" id="btn-comprar" onclick="irCheckout()" disabled>Finalizar compra →</button>
-            <p class="buy-note">🔒 PIX seguro · Entrega em até 15 dias úteis</p>
+        <!-- BUY CARD -->
+        <div class="buy-card">
+          <div class="p-name">Aqua Viva — Kit IoT</div>
+          <div class="p-sub">Monitor profissional de qualidade da água</div>
+          <div class="price-block">
+            <div class="price-big">R$ 1.200</div>
+            <div class="price-sm">Pagamento único · hardware completo</div>
           </div>
+          <ul class="feat-list">
+            <li>ESP32 Wi-Fi + firmware instalado</li>
+            <li>Sensores de pH, turbidez e temperatura</li>
+            <li>Caixa hermética IP65 montada</li>
+            <li>Bateria 18650 + painel solar 5V</li>
+            <li>Cartão SD 16GB incluído</li>
+            <li>Manual de instalação completo</li>
+            <li>Suporte técnico via WhatsApp</li>
+          </ul>
+          <a class="btn-wpp" onclick="wppCompra('Kit IoT Aqua Viva - R$ 1.200')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Quero comprar via WhatsApp
+          </a>
+          <p style="text-align:center;color:var(--t3);font-size:.7rem;margin-top:8px">Clique para abrir o WhatsApp e finalizar seu pedido</p>
         </div>
       </div>
     </div>
   </div>
-  <nav class="bnav"><button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button><button class="bni on" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button><button class="bni" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button><button class="bni" onclick="go('conta');bmob(this)"><span class="bni-ic">👤</span>Conta</button><button class="bni" onclick="go('vendedor');bmob(this)"><span class="bni-ic">⚙️</span>Admin</button></nav>
+  <nav class="bnav">
+    <button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button>
+    <button class="bni on" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button>
+    <button class="bni" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button>
+    <button class="bni" onclick="wppContato('Olá! Gostaria de saber mais sobre o Aqua Viva.')"><span class="bni-ic">💬</span>WhatsApp</button>
+  </nav>
 </div>
 
-<!-- ══════════════ PAGE: PLANOS ══════════════ -->
+<!-- ══════════ PAGE: PLANOS ══════════ -->
 <div class="page" id="page-planos">
-  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Planos</span><div style="width:34px"></div></div>
+  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Planos</span><div style="width:60px"></div></div>
   <div class="sc-area wb" style="padding-top:var(--nh)">
     <div class="sec cx rv">
-      <span class="tag">Assinatura</span><h2 class="h2">Software que se paga sozinho</h2>
+      <span class="tag">Assinatura</span>
+      <h2 class="h2">Software que se paga sozinho</h2>
       <p class="sub">Mortandade custa R$15k–R$80k. Plano Pro é R$189/mês. A conta é simples.</p>
       <div class="plans-grid sg">
-        <div class="plan-c"><div class="pc-nm">Básico</div><div class="pc-pr">R$ 89</div><div class="pc-pd">/mês por propriedade</div><ul class="pc-ul"><li>Até 3 tanques monitorados</li><li>Dashboard em tempo real</li><li>Alertas por e-mail</li><li>Histórico de 30 dias</li><li>1 usuário</li></ul><button class="btn-pc ghost" onclick="go('produto')">Escolher Básico</button></div>
-        <div class="plan-c hot"><div class="pc-nm">Profissional</div><div class="pc-pr">R$ 189</div><div class="pc-pd">/mês por propriedade</div><ul class="pc-ul"><li>Tanques ilimitados</li><li>App mobile completo</li><li>WhatsApp + Telegram + E-mail</li><li>Histórico de 90 dias</li><li>Relatórios automáticos PDF</li><li>Até 5 usuários</li><li>Suporte prioritário</li></ul><button class="btn-pc" onclick="go('produto')">Escolher Pro</button></div>
-        <div class="plan-c"><div class="pc-nm">Institucional</div><div class="pc-pr">R$ 399</div><div class="pc-pd">/mês</div><ul class="pc-ul"><li>Múltiplas propriedades</li><li>API de integração</li><li>Usuários ilimitados</li><li>Suporte dedicado 24h</li><li>Prefeituras e cooperativas</li><li>White-label disponível</li></ul><button class="btn-pc ghost" onclick="go('conta')">Falar com equipe</button></div>
+        <div class="plan-c">
+          <div class="pc-nm">Básico</div>
+          <div class="pc-pr">R$ 89</div>
+          <div class="pc-pd">/mês por propriedade</div>
+          <ul class="pc-ul"><li>Até 3 tanques monitorados</li><li>Dashboard em tempo real</li><li>Alertas por e-mail</li><li>Histórico de 30 dias</li><li>1 usuário</li></ul>
+          <a class="btn-wpp-ghost" onclick="wppCompra('Plano Básico Aqua Viva - R$ 89/mês')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Assinar via WhatsApp
+          </a>
+        </div>
+        <div class="plan-c hot">
+          <div class="pc-nm">Profissional</div>
+          <div class="pc-pr">R$ 189</div>
+          <div class="pc-pd">/mês por propriedade</div>
+          <ul class="pc-ul"><li>Tanques ilimitados</li><li>App mobile completo</li><li>WhatsApp + Telegram + E-mail</li><li>Histórico de 90 dias</li><li>Relatórios automáticos PDF</li><li>Até 5 usuários</li><li>Suporte prioritário</li></ul>
+          <a class="btn-wpp" onclick="wppCompra('Plano Profissional Aqua Viva - R$ 189/mês')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Assinar via WhatsApp
+          </a>
+        </div>
+        <div class="plan-c">
+          <div class="pc-nm">Institucional</div>
+          <div class="pc-pr">R$ 399</div>
+          <div class="pc-pd">/mês</div>
+          <ul class="pc-ul"><li>Múltiplas propriedades</li><li>API de integração</li><li>Usuários ilimitados</li><li>Suporte dedicado 24h</li><li>Prefeituras e cooperativas</li><li>White-label disponível</li></ul>
+          <a class="btn-wpp-ghost" onclick="wppCompra('Plano Institucional Aqua Viva - R$ 399/mês')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Falar via WhatsApp
+          </a>
+        </div>
       </div>
     </div>
   </div>
-  <nav class="bnav"><button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button><button class="bni" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button><button class="bni on" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button><button class="bni" onclick="go('conta');bmob(this)"><span class="bni-ic">👤</span>Conta</button><button class="bni" onclick="go('vendedor');bmob(this)"><span class="bni-ic">⚙️</span>Admin</button></nav>
-</div>
-
-<!-- ══════════════ PAGE: CHECKOUT ══════════════ -->
-<div class="page" id="page-checkout">
-  <div class="topbar"><button onclick="go('produto')" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Finalizar pedido</span><div style="width:34px"></div></div>
-  <div class="sc-area" style="padding-top:var(--nh)">
-    <div class="ck-wrap">
-      <!-- RESUMO DO PEDIDO (dinâmico) -->
-      <div class="osum">
-        <h3>📋 Resumo do pedido</h3>
-        <div id="ck-items-list"></div>
-        <div class="ot2"><span>Total</span><span id="ck-total">R$ 0,00</span></div>
-      </div>
-
-      <span class="fmini">👤 Dados pessoais</span>
-      <div class="fg"><label>Nome completo *</label><input id="f-nome" type="text" placeholder="Seu nome completo"></div>
-      <div class="fg"><label>E-mail *</label><input id="f-email" type="email" placeholder="seu@email.com"></div>
-      <div class="fg"><label>WhatsApp *</label><input id="f-wha" type="tel" placeholder="(27) 99999-9999"></div>
-      <div class="fg"><label>CPF *</label><input id="f-cpf" type="text" placeholder="000.000.000-00"></div>
-
-      <span class="fmini" style="margin-top:20px">📦 Endereço de entrega</span>
-      <div class="fg"><label>CEP *</label>
-        <div style="display:flex;gap:8px">
-          <input id="f-cep" type="text" placeholder="00000-000" style="flex:1" oninput="buscaCEP(this.value)">
-          <button onclick="buscaCEP(document.getElementById('f-cep').value)" style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--bio);padding:0 13px;border-radius:var(--r);font-size:.78rem;cursor:pointer">Buscar</button>
-        </div>
-      </div>
-      <div class="fg"><label>Rua *</label><input id="f-rua" type="text" placeholder="Nome da rua"></div>
-      <div class="fr">
-        <div class="fg"><label>Número *</label><input id="f-num" type="text" placeholder="123"></div>
-        <div class="fg"><label>Complemento</label><input id="f-comp" type="text" placeholder="Apto, Casa..."></div>
-      </div>
-      <div class="fg"><label>Bairro *</label><input id="f-bairro" type="text" placeholder="Bairro"></div>
-      <div class="fr">
-        <div class="fg"><label>Cidade *</label><input id="f-cidade" type="text" placeholder="Cidade"></div>
-        <div class="fg"><label>Estado *</label>
-          <select id="f-uf"><option value="">UF</option><option>AC</option><option>AL</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MG</option><option>MS</option><option>MT</option><option>PA</option><option>PB</option><option>PE</option><option>PI</option><option>PR</option><option>RJ</option><option>RN</option><option>RO</option><option>RR</option><option>RS</option><option>SC</option><option>SE</option><option>SP</option><option>TO</option></select>
-        </div>
-      </div>
-
-      <span class="fmini" style="margin-top:20px">🐟 Sobre o uso</span>
-      <div class="fg"><label>Como vai usar?</label>
-        <select id="f-uso"><option value="">Selecione...</option><option>Piscicultura / Tanques de peixe</option><option>Monitoramento ambiental de rios</option><option>Lagoas e reservatórios</option><option>Pesquisa / Universidade</option><option>Outro</option></select>
-      </div>
-      <div class="fg"><label>Observações</label><textarea id="f-obs" rows="3" placeholder="Informações adicionais..." style="resize:none"></textarea></div>
-
-      <button class="btn-buy" style="margin-top:8px" onclick="finalizar()">💳 Finalizar e pagar via PIX</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ PAGE: CONTA ══════════════ -->
-<div class="page" id="page-conta">
-  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">Minha Conta</span><button id="btn-logout" style="display:none;background:none;border:none;color:var(--t3);font-size:.76rem;cursor:pointer" onclick="doLogout()">Sair</button></div>
-  <div class="sc-area wb" style="padding-top:var(--nh)">
-
-    <!-- AUTH -->
-    <div id="auth-sec">
-      <div class="auth-wrap">
-        <div class="auth-logo">
-          <img src="logo.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <div class="fb2" style="display:none"></div>
-        </div>
-        <div style="text-align:center;margin-bottom:22px">
-          <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:4px">Bem-vindo!</h2>
-          <p style="color:var(--t2);font-size:.8rem">Entre para acompanhar seus pedidos</p>
-        </div>
-        <div class="auth-card">
-          <div class="a-tabs" id="a-tabs">
-            <button class="atab on" onclick="swTab('login')">Entrar</button>
-            <button class="atab" onclick="swTab('reg')">Cadastrar</button>
-          </div>
-
-          <!-- LOGIN -->
-          <div id="tab-login">
-            <div class="fg"><label>E-mail</label><input id="l-em" type="email" placeholder="seu@email.com"></div>
-            <div class="fg"><label>Senha</label><input id="l-pw" type="password" placeholder="••••••••"></div>
-            <button class="btn-auth" onclick="doLogin()">Entrar</button>
-            <div class="or-sep">ou</div>
-            <button class="btn-gg" onclick="loginGoogle()"><span>🌐</span> Entrar com Google</button>
-          </div>
-
-          <!-- REGISTRO -->
-          <div id="tab-reg" style="display:none">
-            <div class="fg"><label>Nome completo *</label><input id="r-nm" type="text" placeholder="Seu nome"></div>
-            <div class="fg"><label>E-mail *</label><input id="r-em" type="email" placeholder="seu@email.com"></div>
-            <div class="fg"><label>Senha (mín. 6 caracteres) *</label><input id="r-pw" type="password" placeholder="••••••••"></div>
-            <div class="fg"><label>Confirmar senha *</label><input id="r-pw2" type="password" placeholder="••••••••"></div>
-            <button class="btn-auth" onclick="doReg()">Criar conta gratuitamente</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="dash-sec" style="display:none">
-      <div class="dash-wrap">
-        <div class="d-greet" id="d-name">Olá!</div>
-        <div class="d-sub">Acompanhe seus pedidos e conta</div>
-        <div style="background:var(--glass);border:1px solid var(--gb);border-radius:var(--rm);padding:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
-          <div><p style="font-weight:600;margin-bottom:2px;font-size:.88rem" id="d-email">—</p><p style="color:var(--t3);font-size:.72rem">conta verificada</p></div>
-          <span class="spill">✓ Ativo</span>
-        </div>
-        <p style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:11px;text-transform:uppercase;letter-spacing:.5px">Meus pedidos</p>
-        <div id="orders-list"><div class="empty"><div class="ei">📦</div><p>Nenhum pedido ainda.<br>Que tal fazer o primeiro?</p><button onclick="go('produto')" class="btn-glow" style="margin-top:14px;display:inline-block;padding:11px 22px;font-size:.86rem">Ver produto</button></div></div>
-      </div>
-    </div>
-  </div>
-  <nav class="bnav"><button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button><button class="bni" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button><button class="bni" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button><button class="bni on" onclick="go('conta');bmob(this)"><span class="bni-ic">👤</span>Conta</button><button class="bni" onclick="go('vendedor');bmob(this)"><span class="bni-ic">⚙️</span>Admin</button></nav>
-</div>
-
-<!-- ══════════════ PAGE: VENDEDOR ══════════════ -->
-<div class="page" id="page-vendedor">
-  <div class="topbar"><button onclick="goHome()" style="background:none;border:none;color:var(--bio);cursor:pointer;font-size:1.05rem">← Voltar</button><span style="font-weight:700">⚙️ Painel Admin</span><button id="btn-seller-out" style="display:none;background:none;border:none;color:var(--t3);font-size:.76rem;cursor:pointer" onclick="sellerOut()">Sair</button></div>
-  <div class="sc-area wb" style="padding-top:var(--nh)">
-    <div id="seller-login-sec" style="padding:clamp(28px,6vw,56px) clamp(16px,4vw,48px) 80px">
-      <div style="max-width:360px;margin:0 auto;text-align:center">
-        <div style="font-size:2.8rem;margin-bottom:14px">🔐</div>
-        <h2 style="font-size:1.15rem;font-weight:800;margin-bottom:5px">Área restrita</h2>
-        <p style="color:var(--t2);font-size:.8rem;margin-bottom:22px">Exclusivo para o administrador</p>
-        <div class="auth-card">
-          <div class="fg"><label>E-mail admin</label><input id="s-em" type="email" placeholder="aquavivain@outlook.com"></div>
-          <div class="fg"><label>Senha</label><input id="s-pw" type="password" placeholder="••••••••"></div>
-          <button class="btn-auth" onclick="sellerLogin()">Entrar como admin</button>
-        </div>
-      </div>
-    </div>
-    <div id="seller-dash-sec" style="display:none">
-      <div class="adm-wrap">
-        <div class="stat-row">
-          <div class="stc"><div class="stv" id="st-p">0</div><div class="stl">Pedidos</div></div>
-          <div class="stc"><div class="stv" id="st-r">R$0</div><div class="stl">Receita</div></div>
-          <div class="stc"><div class="stv" id="st-c">0</div><div class="stl">Clientes</div></div>
-          <div class="stc"><div class="stv" id="st-n">0</div><div class="stl">Pendentes</div></div>
-        </div>
-        <div style="height:1px;background:var(--gb);margin-bottom:18px"></div>
-        <p style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:11px;text-transform:uppercase;letter-spacing:.5px">Pedidos recebidos</p>
-        <div id="adm-orders"><div class="empty"><div class="ei">📭</div><p>Nenhum pedido</p></div></div>
-      </div>
-    </div>
-  </div>
-  <nav class="bnav"><button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button><button class="bni" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button><button class="bni" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button><button class="bni" onclick="go('conta');bmob(this)"><span class="bni-ic">👤</span>Conta</button><button class="bni on" onclick="go('vendedor');bmob(this)"><span class="bni-ic">⚙️</span>Admin</button></nav>
-</div>
-
-<!-- ══════════════ MODAL PIX ══════════════ -->
-<div class="overlay" id="overlay" onclick="closeOv(event)">
-  <div class="mbox">
-    <div class="m-hand"></div>
-    <button class="m-close" onclick="closeMod()">✕</button>
-    <div class="mf" id="mf">
-      <h2>Pagamento via PIX</h2>
-      <div class="m-sub" id="m-sub">Aqua Viva</div>
-      <div class="pa">
-        <div class="pa-l">Total a pagar</div>
-        <div class="pa-v" id="pa-v">R$ 0,00</div>
-        <div class="pa-items" id="pa-items"></div>
-      </div>
-      <div class="psteps">
-        <div class="ps"><div class="psn">1</div><p>Abra seu banco e toque em <strong>Pagar via PIX</strong></p></div>
-        <div class="ps"><div class="psn">2</div><p>Cole a chave abaixo ou use o número de telefone</p></div>
-        <div class="ps"><div class="psn">3</div><p>Confirme o <strong>nome do destinatário</strong> antes de confirmar</p></div>
-        <div class="ps"><div class="psn">4</div><p>Envie o comprovante para <strong>aquavivain@outlook.com</strong></p></div>
-      </div>
-      <div class="pkey">
-        <span class="pk-v">27998851001</span>
-        <button class="btn-cp" onclick="copyPix()">Copiar</button>
-      </div>
-      <div class="pinfo">
-        <strong>Chave PIX:</strong> 27998851001 (Telefone)<br>
-        <strong>Destinatário:</strong> SEU_NOME_AQUI<br>
-        <strong>Confirmação:</strong> em até 2h após o comprovante
-      </div>
-      <button class="btn-cf" onclick="confirmar()">✅ Já realizei o pagamento</button>
-    </div>
-    <div class="sbox" id="sbox">
-      <div class="sic">🎉</div>
-      <h3>Pedido registrado!</h3>
-      <p>Assim que recebermos o comprovante, confirmamos em até 2 horas.<br><br><strong style="color:var(--bio)">aquavivain@outlook.com</strong><br><br>Entrega em até <strong style="color:#fff">15 dias úteis</strong> 🐟</p>
-      <button class="btn-glow" style="margin-top:18px;display:inline-block;padding:12px 24px;font-size:.86rem" onclick="closeMod();go('conta')">Ver meus pedidos</button>
-    </div>
-  </div>
+  <nav class="bnav">
+    <button class="bni" onclick="goHome();bmob(this)"><span class="bni-ic">🏠</span>Início</button>
+    <button class="bni" onclick="go('produto');bmob(this)"><span class="bni-ic">🛒</span>Produto</button>
+    <button class="bni on" onclick="go('planos');bmob(this)"><span class="bni-ic">💎</span>Planos</button>
+    <button class="bni" onclick="wppContato('Olá! Gostaria de saber mais sobre o Aqua Viva.')"><span class="bni-ic">💬</span>WhatsApp</button>
+  </nav>
 </div>
 
 <script>
-/* ═══════════════════════════════
-   FIREBASE — substitua os dados:
-═══════════════════════════════ */
-const FB = {
-  apiKey: "COLE_SUA_API_KEY",
-  authDomain: "SEU-PROJETO.firebaseapp.com",
-  projectId: "SEU-PROJETO",
-  storageBucket: "SEU-PROJETO.appspot.com",
-  messagingSenderId: "SEU_ID",
-  appId: "SEU_APP_ID"
-};
-const ADMIN = 'aquavivain@outlook.com';
-const PIX   = '27998851001';
+/* ── NÚMERO DO WHATSAPP ──────────────────────
+   Coloque o número com DDI+DDD sem espaços:  */
+const WPP = '5527998851001';
 
-let db, auth, cu = null, pedido = null;
-try {
-  firebase.initializeApp(FB);
-  db   = firebase.firestore();
-  auth = firebase.auth();
-  auth.onAuthStateChanged(u => { cu = u; syncAuth(u); });
-} catch(e) { console.warn('Firebase não configurado — modo demo ativo'); }
+function wppContato(msg) {
+  window.open(`https://wa.me/${WPP}?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
-/* ─── PARTICLES ─── */
+function wppCompra(item) {
+  const msg = `Olá! Tenho interesse em adquirir:\n\n🛒 *${item}*\n\nPoderia me passar mais informações?`;
+  window.open(`https://wa.me/${WPP}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+/* ── CANVAS PARTICLES ─── */
 const cvs = document.getElementById('cvs'), ctx = cvs.getContext('2d');
 let W, H, pts = [];
 function resize(){ W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
 resize(); window.addEventListener('resize', resize);
-for(let i=0;i<40;i++) pts.push({x:Math.random()*9999%innerWidth, y:Math.random()*9999%innerHeight, r:Math.random()*1.6+.3, vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.15, o:Math.random()*.28+.05});
+for(let i=0;i<40;i++) pts.push({x:Math.random()*9999%innerWidth,y:Math.random()*9999%innerHeight,r:Math.random()*1.6+.3,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,o:Math.random()*.25+.05});
 (function draw(){
   ctx.clearRect(0,0,W,H);
   pts.forEach(p=>{
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(0,229,255,${p.o})`; ctx.fill();
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(0,229,255,${p.o})`;ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
   });
   pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
     const d=Math.hypot(a.x-b.x,a.y-b.y);
-    if(d<85){ ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,229,255,${.045*(1-d/85)})`;ctx.lineWidth=.4;ctx.stroke(); }
+    if(d<85){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,229,255,${.04*(1-d/85)})`;ctx.lineWidth=.4;ctx.stroke();}
   }));
   requestAnimationFrame(draw);
 })();
 
-/* ─── TOPBAR ─── */
-document.getElementById('home-sc')?.addEventListener('scroll', e=>{
-  document.getElementById('topbar').classList.toggle('sc', e.target.scrollTop > 50);
+/* ── TOPBAR ─── */
+document.getElementById('home-sc')?.addEventListener('scroll',e=>{
+  document.getElementById('topbar').classList.toggle('sc',e.target.scrollTop>50);
 });
 
-/* ─── NAV ─── */
+/* ── NAV ─── */
 function go(p){ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active')); document.getElementById('page-'+p)?.classList.add('active'); }
 function goHome(){ go('home'); }
 function bmob(btn){ btn.closest('.bnav').querySelectorAll('.bni').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
 function scrollTo2(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
 
-/* ─── REVEAL ─── */
-const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('ok'); }),{threshold:.1});
+/* ── REVEAL ─── */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('ok');}),{threshold:.1});
 document.querySelectorAll('.rv,.rvl,.rvr,.sg').forEach(el=>obs.observe(el));
 
-/* ─── COUNTER ─── */
-const cobs = new IntersectionObserver(es=>es.forEach(e=>{
-  if(!e.isIntersecting) return;
-  const t=+e.target.dataset.to; if(!t)return;
-  let c=0, step=t/55;
-  const iv=setInterval(()=>{ c+=step; if(c>=t){c=t;clearInterval(iv);} e.target.textContent=Math.floor(c)+(e.target.dataset.to=='90'?'%':''); },18);
+/* ── COUNTER ─── */
+const cobs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  const t=+e.target.dataset.to;if(!t)return;
+  let c=0,step=t/55;
+  const iv=setInterval(()=>{c+=step;if(c>=t){c=t;clearInterval(iv);}e.target.textContent=Math.floor(c)+(e.target.dataset.to=='90'?'%':'');},18);
   cobs.unobserve(e.target);
 }),{threshold:.5});
 document.querySelectorAll('[data-to]').forEach(el=>cobs.observe(el));
-
-/* ═══════════════════════════════════
-   CARRINHO
-═══════════════════════════════════ */
-const PLAN_BENEFITS = {
-  basico: {
-    title: 'Plano Básico inclui:',
-    items: ['Até 3 tanques monitorados','Dashboard em tempo real','Alertas por e-mail','Histórico de 30 dias','1 usuário']
-  },
-  pro: {
-    title: 'Plano Profissional inclui:',
-    items: ['Tanques ilimitados','App mobile completo','WhatsApp + Telegram + E-mail','Histórico de 90 dias','Relatórios automáticos PDF','Até 5 usuários','Suporte prioritário 24h']
-  }
-};
-
-let cart = { device: false, plan: false };
-let currentPlan = 'basico';
-const PRICES = { device: 1200, basico: 89, pro: 189 };
-
-function toggleItem(item) {
-  cart[item] = !cart[item];
-  const btn = document.getElementById('ab-' + item);
-  btn.classList.toggle('in-cart', cart[item]);
-
-  // mostra/oculta seletor de plano
-  document.getElementById('plan-selector').style.display = cart.plan ? 'block' : 'none';
-
-  updateCart();
-}
-
-function selPlan(name) {
-  currentPlan = name;
-  document.getElementById('pl-basico').classList.toggle('on', name === 'basico');
-  document.getElementById('pl-pro').classList.toggle('on', name === 'pro');
-
-  // Atualiza preço no botão
-  const price = name === 'pro' ? 'R$ 189/mês' : 'R$ 89/mês';
-  document.getElementById('ab-plan-price').textContent = price;
-
-  // Mostra benefícios
-  const b = PLAN_BENEFITS[name];
-  document.getElementById('pb-title').textContent = b.title;
-  const ul = document.getElementById('pb-list');
-  ul.innerHTML = b.items.map(i => `<li>${i}</li>`).join('');
-
-  updateCart();
-}
-
-function updateCart() {
-  const items = document.getElementById('cart-items');
-  const empty = document.getElementById('cart-empty');
-  let total = 0;
-  let html = '';
-
-  if (cart.device) {
-    total += PRICES.device;
-    html += `<div class="ci"><div class="ci-info"><div class="ci-name">Kit IoT Completo</div><div class="ci-desc">Hardware + firmware instalado</div></div><span class="ci-price">R$ 1.200</span><button class="ci-rm" onclick="toggleItem('device')" title="Remover">✕</button></div>`;
-  }
-  if (cart.plan) {
-    const p = PRICES[currentPlan];
-    total += p;
-    const nome = currentPlan === 'pro' ? 'Plano Profissional' : 'Plano Básico';
-    html += `<div class="ci"><div class="ci-info"><div class="ci-name">${nome}</div><div class="ci-desc">Plataforma de monitoramento · mensal</div></div><span class="ci-price">R$ ${p}/mês</span><button class="ci-rm" onclick="toggleItem('plan')" title="Remover">✕</button></div>`;
-  }
-
-  // Mostra benefícios do plano sempre que o plano estiver no carrinho
-  if (cart.plan) {
-    const b = PLAN_BENEFITS[currentPlan];
-    document.getElementById('pb-title').textContent = b.title;
-    document.getElementById('pb-list').innerHTML = b.items.map(i=>`<li>${i}</li>`).join('');
-  }
-
-  items.innerHTML = html;
-  if(empty) empty.style.display = (html === '') ? 'block' : 'none';
-
-  const totalStr = total > 0 ? formatMoney(total) : 'R$ 0,00';
-  document.getElementById('cart-total').textContent = totalStr;
-
-  const btn = document.getElementById('btn-comprar');
-  btn.disabled = total === 0;
-
-  // Atualiza checkout
-  updateCheckout(total);
-}
-
-function updateCheckout(total) {
-  const ckList = document.getElementById('ck-items-list');
-  const ckTotal = document.getElementById('ck-total');
-  if (!ckList) return;
-  let html = '';
-  if (cart.device) html += `<div class="or2"><span>Kit IoT Completo</span><span>R$ 1.200,00</span></div>`;
-  if (cart.plan) {
-    const p = PRICES[currentPlan];
-    const nome = currentPlan === 'pro' ? 'Plano Profissional' : 'Plano Básico';
-    html += `<div class="or2"><span>${nome} (1º mês)</span><span>R$ ${p},00</span></div>`;
-  }
-  if (!cart.device && !cart.plan) html = '<div class="or2"><span style="color:var(--t3)">Nenhum item</span><span>—</span></div>';
-  ckList.innerHTML = html;
-  if (ckTotal) ckTotal.textContent = formatMoney(total);
-
-  // Modal PIX
-  if (document.getElementById('pa-v')) document.getElementById('pa-v').textContent = formatMoney(total);
-  if (document.getElementById('pa-items')) {
-    let pItems = [];
-    if (cart.device) pItems.push('Kit IoT: R$ 1.200');
-    if (cart.plan) pItems.push(`${currentPlan==='pro'?'Plano Pro':'Plano Básico'}: R$ ${PRICES[currentPlan]}`);
-    document.getElementById('pa-items').textContent = pItems.join(' + ');
-  }
-}
-
-function formatMoney(v) {
-  return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-}
-
-function irCheckout() {
-  if (!cart.device && !cart.plan) { toast('Adicione pelo menos um item ⚠️'); return; }
-  // Pré-preenche e-mail se logado
-  if (cu && document.getElementById('f-email')) document.getElementById('f-email').value = cu.email;
-  if (cu && document.getElementById('f-nome')) document.getElementById('f-nome').value = cu.displayName || '';
-  go('checkout');
-}
-
-// Inicializa benefícios do básico
-selPlan('basico');
-
-/* ─── BUSCA CEP ─── */
-async function buscaCEP(v) {
-  v = v.replace(/\D/g,''); if(v.length!==8)return;
-  try {
-    const r = await fetch(`https://viacep.com.br/ws/${v}/json/`);
-    const d = await r.json(); if(d.erro)return;
-    document.getElementById('f-rua').value = d.logradouro||'';
-    document.getElementById('f-bairro').value = d.bairro||'';
-    document.getElementById('f-cidade').value = d.localidade||'';
-    document.getElementById('f-uf').value = d.uf||'';
-    document.getElementById('f-num').focus();
-    toast('CEP encontrado ✓');
-  } catch(e) {}
-}
-
-/* ─── FINALIZAR PEDIDO ─── */
-function finalizar() {
-  const req = ['f-nome','f-email','f-wha','f-cpf','f-cep','f-rua','f-num','f-bairro','f-cidade','f-uf','f-uso'];
-  for(const id of req){
-    const el = document.getElementById(id);
-    if(!el?.value.trim()){ toast('Preencha todos os campos obrigatórios ⚠️'); el?.focus(); return; }
-  }
-
-  const total = (cart.device ? 1200 : 0) + (cart.plan ? PRICES[currentPlan] : 0);
-
-  pedido = {
-    nome: document.getElementById('f-nome').value,
-    email: document.getElementById('f-email').value,
-    whats: document.getElementById('f-wha').value,
-    cpf: document.getElementById('f-cpf').value,
-    endereco: {
-      cep: document.getElementById('f-cep').value,
-      rua: document.getElementById('f-rua').value,
-      num: document.getElementById('f-num').value,
-      comp: document.getElementById('f-comp').value || '',
-      bairro: document.getElementById('f-bairro').value,
-      cidade: document.getElementById('f-cidade').value,
-      estado: document.getElementById('f-uf').value,
-    },
-    uso: document.getElementById('f-uso').value,
-    obs: document.getElementById('f-obs')?.value || '',
-    itens: {
-      device: cart.device,
-      plan: cart.plan ? currentPlan : null,
-    },
-    valor: total,
-    status: 'aguardando_pagamento',
-    data: new Date().toISOString(),
-    uid: cu?.uid || 'anonimo',
-  };
-
-  openMod();
-}
-
-/* ─── MODAL PIX ─── */
-function openMod() {
-  document.getElementById('overlay').classList.add('op');
-  document.getElementById('mf').classList.remove('hide');
-  document.getElementById('sbox').classList.remove('show');
-  document.body.style.overflow = 'hidden';
-}
-function closeMod() { document.getElementById('overlay').classList.remove('op'); document.body.style.overflow = ''; }
-function closeOv(e) { if(e.target===document.getElementById('overlay')) closeMod(); }
-function copyPix() {
-  navigator.clipboard.writeText(PIX)
-    .then(()=>toast('Chave PIX copiada! ✓'))
-    .catch(()=>toast('Chave: '+PIX));
-}
-async function confirmar() {
-  if(db && pedido) {
-    try { await db.collection('pedidos').add({...pedido, status:'pagamento_informado'}); }
-    catch(e) { console.warn('Erro Firestore:', e); }
-  }
-  document.getElementById('mf').classList.add('hide');
-  document.getElementById('sbox').classList.add('show');
-}
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeMod(); });
-
-/* ═══════════════════════════════════
-   AUTH FIREBASE
-═══════════════════════════════════ */
-function syncAuth(u) {
-  const authSec  = document.getElementById('auth-sec');
-  const dashSec  = document.getElementById('dash-sec');
-  const btnOut   = document.getElementById('btn-logout');
-  const navAv    = document.getElementById('nav-av');
-  const navAv2   = document.getElementById('nav-av2');
-
-  if(u) {
-    authSec.style.display  = 'none';
-    dashSec.style.display  = 'block';
-    if(btnOut) btnOut.style.display = 'block';
-    const initials = (u.displayName || u.email).substring(0,2).toUpperCase();
-    if(navAv) navAv.textContent = initials;
-    if(navAv2) navAv2.textContent = initials;
-    document.getElementById('d-name').textContent = `Olá, ${u.displayName || u.email.split('@')[0]}!`;
-    document.getElementById('d-email').textContent = u.email;
-    loadOrders(u);
-    // Admin auto-login
-    if(u.email === ADMIN) {
-      document.getElementById('seller-login-sec').style.display = 'none';
-      document.getElementById('seller-dash-sec').style.display = 'block';
-      document.getElementById('btn-seller-out').style.display = 'block';
-      loadAdmin();
-    }
-  } else {
-    authSec.style.display  = 'block';
-    dashSec.style.display  = 'none';
-    if(btnOut) btnOut.style.display = 'none';
-    if(navAv) navAv.textContent = '?';
-    if(navAv2) navAv2.textContent = '?';
-  }
-}
-
-function swTab(tab) {
-  document.getElementById('tab-login').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('tab-reg').style.display   = tab==='reg'   ? 'block' : 'none';
-  document.querySelectorAll('.atab').forEach((t,i)=>t.classList.toggle('on',(i===0&&tab==='login')||(i===1&&tab==='reg')));
-}
-
-async function doLogin() {
-  if(!auth){ toast('Configure o Firebase primeiro'); return; }
-  const em = document.getElementById('l-em').value.trim();
-  const pw = document.getElementById('l-pw').value;
-  if(!em||!pw){ toast('Preencha e-mail e senha'); return; }
-  try {
-    await auth.signInWithEmailAndPassword(em, pw);
-    toast('Login realizado! ✓');
-  } catch(e) {
-    const msgs = {
-      'auth/user-not-found':'E-mail não encontrado',
-      'auth/wrong-password':'Senha incorreta',
-      'auth/invalid-email':'E-mail inválido',
-      'auth/too-many-requests':'Muitas tentativas. Aguarde.',
-    };
-    toast(msgs[e.code] || 'Erro ao entrar');
-  }
-}
-
-async function doReg() {
-  if(!auth){ toast('Configure o Firebase primeiro'); return; }
-  const nm = document.getElementById('r-nm').value.trim();
-  const em = document.getElementById('r-em').value.trim();
-  const pw = document.getElementById('r-pw').value;
-  const pw2 = document.getElementById('r-pw2').value;
-  if(!nm||!em||!pw||!pw2){ toast('Preencha todos os campos'); return; }
-  if(pw.length < 6){ toast('Senha mínimo 6 caracteres'); return; }
-  if(pw !== pw2){ toast('As senhas não coincidem'); return; }
-  try {
-    const cred = await auth.createUserWithEmailAndPassword(em, pw);
-    await cred.user.updateProfile({ displayName: nm });
-    // Força re-sync pois o onAuthStateChanged pode não disparar displayName
-    document.getElementById('d-name').textContent = `Olá, ${nm}!`;
-    toast('Conta criada com sucesso! 🎉');
-  } catch(e) {
-    const msgs = {
-      'auth/email-already-in-use':'E-mail já cadastrado',
-      'auth/invalid-email':'E-mail inválido',
-      'auth/weak-password':'Senha muito fraca',
-    };
-    toast(msgs[e.code] || 'Erro ao criar conta');
-  }
-}
-
-function loginGoogle() {
-  if(!auth){ toast('Configure o Firebase primeiro'); return; }
-  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    .then(()=>toast('Bem-vindo! ✓'))
-    .catch(()=>toast('Erro ao entrar com Google'));
-}
-
-function doLogout() {
-  auth?.signOut();
-  toast('Até logo! 👋');
-}
-
-/* ─── PEDIDOS DO CLIENTE ─── */
-async function loadOrders(u) {
-  if(!db) return;
-  try {
-    const snap = await db.collection('pedidos').where('uid','==',u.uid).get();
-    const list = document.getElementById('orders-list');
-    if(snap.empty) return;
-    list.innerHTML = '';
-    snap.forEach(doc => {
-      const d = doc.data();
-      const id = doc.id.substring(0,8).toUpperCase();
-      const dt = new Date(d.data).toLocaleDateString('pt-BR');
-      const statusMap = {
-        aguardando_pagamento:'⏳ Aguardando PIX',
-        pagamento_informado:'🔍 Verificando',
-        pago:'✅ Pago',
-        em_producao:'🔧 Produção',
-        enviado:'🚚 Enviado',
-        entregue:'📦 Entregue',
-      };
-      const cls = {aguardando_pagamento:'sw',pagamento_informado:'sw',pago:'so',enviado:'ss2',entregue:'so',em_producao:'ss2'};
-      const itens = [];
-      if(d.itens?.device) itens.push('Kit IoT');
-      if(d.itens?.plan) itens.push('Plano '+d.itens.plan);
-      list.innerHTML += `<div class="o-card"><div class="o-head2"><div><div class="o-id">#${id}</div><div class="o-dt">${dt}</div></div><span class="sbadge ${cls[d.status]||'sw'}">${statusMap[d.status]||d.status}</span></div><div class="o-prod">${itens.join(' + ')}</div><div class="o-bot"><span style="color:var(--t3);font-size:.74rem">${d.endereco?.cidade||''}/${d.endereco?.estado||''}</span><span class="o-val">${formatMoney(d.valor||0)}</span></div></div>`;
-    });
-  } catch(e) { console.warn(e); }
-}
-
-/* ─── ADMIN ─── */
-async function sellerLogin() {
-  if(!auth){ toast('Configure o Firebase'); return; }
-  const em = document.getElementById('s-em').value.trim();
-  const pw = document.getElementById('s-pw').value;
-  if(!em||!pw){ toast('Preencha e-mail e senha'); return; }
-  try {
-    await auth.signInWithEmailAndPassword(em, pw);
-    if(auth.currentUser?.email !== ADMIN){ await auth.signOut(); toast('Acesso não autorizado'); return; }
-    document.getElementById('seller-login-sec').style.display = 'none';
-    document.getElementById('seller-dash-sec').style.display = 'block';
-    document.getElementById('btn-seller-out').style.display = 'block';
-    loadAdmin();
-    toast('Bem-vindo, admin! ✓');
-  } catch(e) { toast('E-mail ou senha incorretos'); }
-}
-
-function sellerOut() {
-  auth?.signOut();
-  document.getElementById('seller-login-sec').style.display = 'block';
-  document.getElementById('seller-dash-sec').style.display = 'none';
-  document.getElementById('btn-seller-out').style.display = 'none';
-  toast('Sessão encerrada');
-}
-
-async function loadAdmin() {
-  if(!db) return;
-  try {
-    const snap = await db.collection('pedidos').orderBy('data','desc').get();
-    let total=0, rec=0, pen=0;
-    const clients = new Set();
-    let html = '';
-    snap.forEach(doc => {
-      const d = doc.data();
-      total++; rec += d.valor||0; clients.add(d.email);
-      if(['aguardando_pagamento','pagamento_informado'].includes(d.status)) pen++;
-      const id  = doc.id.substring(0,8).toUpperCase();
-      const dt  = new Date(d.data).toLocaleDateString('pt-BR');
-      const itens = [];
-      if(d.itens?.device) itens.push('Kit IoT');
-      if(d.itens?.plan) itens.push('Plano '+d.itens.plan);
-      html += `<div class="oad"><div class="oad-h"><div class="oad-nm">${d.nome}</div><div class="oad-tm">${dt}</div></div><div class="oad-info">📧 ${d.email}\n📱 ${d.whats}\n📦 ${itens.join(' + ')} · R$ ${d.valor}\n📍 ${d.endereco?.rua||''}, ${d.endereco?.num||''} — ${d.endereco?.cidade||''}/${d.endereco?.estado||''}</div><select class="stat-sel" id="ss-${doc.id}"><option value="aguardando_pagamento" ${d.status==='aguardando_pagamento'?'selected':''}>⏳ Aguardando PIX</option><option value="pagamento_informado" ${d.status==='pagamento_informado'?'selected':''}>🔍 Verificando</option><option value="pago" ${d.status==='pago'?'selected':''}>✅ Pago</option><option value="em_producao" ${d.status==='em_producao'?'selected':''}>🔧 Em produção</option><option value="enviado" ${d.status==='enviado'?'selected':''}>🚚 Enviado</option><option value="entregue" ${d.status==='entregue'?'selected':''}>📦 Entregue</option></select><button class="btn-upd" onclick="updStatus('${doc.id}')">Atualizar status</button></div>`;
-    });
-    document.getElementById('st-p').textContent = total;
-    document.getElementById('st-r').textContent = 'R$'+rec.toLocaleString('pt-BR');
-    document.getElementById('st-c').textContent = clients.size;
-    document.getElementById('st-n').textContent = pen;
-    document.getElementById('adm-orders').innerHTML = html || '<div class="empty"><div class="ei">📭</div><p>Nenhum pedido</p></div>';
-  } catch(e) { console.warn(e); }
-}
-
-async function updStatus(id) {
-  if(!db) return;
-  const v = document.getElementById('ss-'+id).value;
-  try { await db.collection('pedidos').doc(id).update({status:v}); toast('Status atualizado ✓'); }
-  catch(e) { toast('Erro ao atualizar'); }
-}
-
-/* ─── TOAST ─── */
-let toastTimer;
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
-}
 </script>
 </body>
 </html>
-HTMLEOF
+EOF
+cp /tmp/aquaviva.html /mnt/user-data/outputs/index.html
 echo "Done"
